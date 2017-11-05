@@ -2,10 +2,17 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="laam.Views.MainPage"
-             Title="MainPage">
+             Title="{Binding Title}">
   <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-    <Label Text="{Binding Title}" />
+    <Entry Text="{Binding LeonetId}" Placeholder="LeonetId"></Entry>
+    <Entry Text="{Binding LeonetPassword}" Placeholder="LeonetPassword"></Entry> 
+    <Button Text="Leonet Logon" IsEnabled="{Binding CanLogon}">
+        <Button.Behaviors>
+                <behaviors:EventToCommandBehavior EventName="Clicked" Command="{Binding LogonCommand}"></behaviors:EventToCommandBehavior>
+        </Button.Behaviors>
+    </Button>
   </StackLayout>
 </ContentPage>

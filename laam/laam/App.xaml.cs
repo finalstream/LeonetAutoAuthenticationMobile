@@ -2,6 +2,7 @@
 using Prism.Autofac;
 using Prism.Autofac.Forms;
 using laam.Views;
+using Prism.AppModel;
 using Xamarin.Forms;
 
 namespace laam
@@ -14,7 +15,7 @@ namespace laam
         {
             InitializeComponent();
 
-            NavigationService.NavigateAsync("NavigationPage/MainPage?title=Hello%20from%20Xamarin.Forms");
+            NavigationService.NavigateAsync("NavigationPage/MainPage?title=Leonet%20Auto%20Authentication");
         }
 
         protected override void RegisterTypes()
@@ -22,5 +23,20 @@ namespace laam
             Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
         }
+
+        protected override void OnSleep()
+        {
+            base.OnSleep();
+            (MainPage.BindingContext as IApplicationLifecycle)?.OnSleep();
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            (MainPage.BindingContext as IApplicationLifecycle)?.OnResume();
+        }
+
+
+
     }
 }
