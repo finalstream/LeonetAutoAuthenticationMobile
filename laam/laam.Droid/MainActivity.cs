@@ -9,7 +9,9 @@ using Android.Widget;
 using Android.OS;
 using Autofac;
 using laam.Models;
+using Plugin.Toasts;
 using Prism.Autofac.Forms;
+using Xamarin.Forms;
 
 namespace laam.Droid
 {
@@ -22,6 +24,13 @@ namespace laam.Droid
             ToolbarResource = Resource.Layout.toolbar;
 
             base.OnCreate(bundle);
+
+            DependencyService.Register<ToastNotification>(); // Register your dependency
+            // If you are using Android you must pass through the activity
+            var platformOptions = new PlatformOptions();
+            platformOptions.Style = NotificationStyle.Snackbar;
+            ToastNotification.Init(this, platformOptions);
+
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer(this)));

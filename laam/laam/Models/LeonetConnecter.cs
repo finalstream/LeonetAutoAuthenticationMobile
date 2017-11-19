@@ -7,11 +7,14 @@ using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Logging;
 
 namespace laam.Models
 {
     public class LeonetConnecter
     {
+        public event EventHandler Connected;
+
         private readonly IWifiService _wifiService;
 
         public LeonetConnecter(IWifiService wifiService)
@@ -19,9 +22,9 @@ namespace laam.Models
             _wifiService = wifiService;
         }
 
-        public void Connect(string leonetId, string leonetPassword)
+        public async Task ConnectAsync(string leonetId, string leonetPassword)
         {
-            //_wifiService.Connect(leonetId, leonetPassword);
+            //_wifiService.ConnectAsync(leonetId, leonetPassword);
 
             //_wifiService.SetMobileDataEnabled(false);
             
@@ -33,13 +36,13 @@ namespace laam.Models
             using (var client = new HttpClient(handler))
             {
                 client.Timeout = TimeSpan.FromSeconds(5);
-                var result = client.GetAsync(url).Result;
+                var result = await client.GetAsync(url);
 
-                
+                if (result.IsSuccessStatusCode) OnConnected();
             }
             /*
             _wifiService.SetMobileDataEnabled(true);
-            //_wifiService.Connect();
+            //_wifiService.ConnectAsync();
 
             
             //HttpWebRequestの作成
@@ -86,6 +89,11 @@ namespace laam.Models
                 exit();
             }*/
 
+        }
+
+        protected virtual void OnConnected()
+        {
+            Connected?.Invoke(this, EventArgs.Empty);
         }
     }
 }

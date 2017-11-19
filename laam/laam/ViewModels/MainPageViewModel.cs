@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using laam.Models;
+using Plugin.Toasts;
 using Prism.AppModel;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
 
 namespace laam.ViewModels
 {
@@ -62,9 +64,24 @@ namespace laam.ViewModels
         public MainPageViewModel(IWifiService wifiService)
         {
             LeonetConnecter = new LeonetConnecter(wifiService);
-            LogonCommand = new DelegateCommand(() =>
+            LeonetConnecter.Connected += async (sender, args) =>
+            {
+                var notificator = DependencyService.Get<IToastNotificator>();
+                var androidOptions = new AndroidOptions();
+                androidOptions.DismissText = "";
+
+                var options = new NotificationOptions()
                 {
-                    LeonetConnecter.Connect(LeonetId, LeonetPassword);
+                    Title = "Success",
+                    AndroidOptions = androidOptions
+                };
+
+                await notificator.Notify(options);
+            };
+
+            LogonCommand = new DelegateCommand(async () =>
+                {
+                    await LeonetConnecter.ConnectAsync(LeonetId, LeonetPassword);
 
                 })
                 .ObservesCanExecute(()=> CanLogon);
